@@ -4,29 +4,29 @@ const path = require('path');
 const sourceDir = path.join(__dirname, 'files');
 const targetDir = path.join(__dirname, 'files-copy');
 
-async function makeDir(path) {
-  fs.promises.mkdir(path)
+function copyFilesToDir(sourcePath, targetPath, copyFunc) {
+  fs.promises.mkdir(targetPath)
     .then(() => {
       console.log('Directory created successfully');
-      return false;
     }).catch(() => {
-      console.log('Folder already exists!');
-      return true;
-    });
+      console.log('Folder already exists! Clearing!');
+      clearDir(targetPath);
+    }).then(() => copyFunc(sourcePath, targetPath));
 }
 
-async function clearDir(target) {
+function clearDir(target) {
   fs.promises.readdir(target)
     .then(filenames => {
-      console.log('Clearing folder');
+      console.log('Folder cleared');
       filenames.forEach(file => {
         const fileToDelete = path.join(target, file);
         fs.unlink(fileToDelete, () => {});
       });
-    });
+    }).catch(err => console.log(err));
+  
 }
 
-async function copyFiles(source, target) {
+function copyFiles(source, target) {
   fs.promises.readdir(source, { withFileTypes: true })
     .then(filenames => {
       filenames.forEach(file => {
@@ -40,13 +40,7 @@ async function copyFiles(source, target) {
         }
       });
       console.log('All files copied!');
-    });
+    }).catch(err => console.log(err));
 }
 
-async function main(){
-  await makeDir(targetDir);
-  await clearDir(targetDir);
-  await copyFiles(sourceDir,targetDir);
-}
-
-main();
+copyFilesToDir(sourceDir, targetDir, copyFiles);
