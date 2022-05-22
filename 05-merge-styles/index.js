@@ -30,7 +30,10 @@ function bundleCss(cssArr, targetFolder) {
     if (cssArr[i]){
       cssExist = true;
       const readStream = fs.createReadStream(cssArr[i], 'utf-8');
-      readStream.pipe(writeStream);
+      readStream.on('data', chunk => {
+        writeStream.write(chunk);
+        writeStream.write('\n');
+      });
     }
   }
   
