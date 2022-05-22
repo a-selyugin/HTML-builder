@@ -11,14 +11,14 @@ readdir(fileDir,
     else {
       files.forEach(file => {
         if (file.isFile()){
-          const fileName = file.name.substring(0, file.name.indexOf('.'));
+          const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
           const fileExt = path.extname(file.name).substring(1);
           stat(path.join(fileDir, file.name), (err,stats) => {
             if (err) {
               console.log(err);
             } else {
               const fileSize = (stats.size / 1024).toFixed(3) + 'kb';
-              console.log(fileName, '-' ,fileExt,'-',fileSize);
+              console.log(fileName, '-', fileExt, '-', fileSize);
               return stats.size;
             }
           });
