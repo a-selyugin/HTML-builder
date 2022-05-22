@@ -8,22 +8,9 @@ function copyFilesToDir(sourcePath, targetPath, copyFunc) {
   fs.promises.mkdir(targetPath)
     .then(() => {
       console.log('Directory created successfully');
-    }).catch(() => {
-      console.log('Folder already exists! Clearing!');
-      clearDir(targetPath);
+    }).catch((err) => {
+      console.log(err);
     }).then(() => copyFunc(sourcePath, targetPath));
-}
-
-function clearDir(target) {
-  fs.promises.readdir(target)
-    .then(filenames => {
-      console.log('Folder cleared');
-      filenames.forEach(file => {
-        const fileToDelete = path.join(target, file);
-        fs.unlink(fileToDelete, () => {});
-      });
-    }).catch(err => console.log(err));
-  
 }
 
 function copyFiles(source, target) {
@@ -43,4 +30,5 @@ function copyFiles(source, target) {
     }).catch(err => console.log(err));
 }
 
-copyFilesToDir(sourceDir, targetDir, copyFiles);
+fs.promises.rm(targetDir, { recursive: true, force: true }, () => {})
+  .then(() => {copyFilesToDir(sourceDir, targetDir, copyFiles);});
