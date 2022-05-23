@@ -19,7 +19,6 @@ readdir(fileDir,
             } else {
               const fileSize = (stats.size / 1024).toFixed(3) + 'kb';
               console.log(fileName, '-', fileExt, '-', fileSize);
-              return stats.size;
             }
           });
         }
