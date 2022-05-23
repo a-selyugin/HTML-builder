@@ -116,7 +116,7 @@ function bundleCss(cssArr, targetFolder) {
   let cssExist = false;
   const targetFile = path.join(targetFolder, 'style.css');
   const writeStream = fs.createWriteStream(targetFile);
-  for (let i = 0; i < cssArr.length; i += 1) {
+  for (let i = cssArr.length - 1; i >= 0; i -= 1) {
     if (cssArr[i]){
       cssExist = true;
       const readStream = fs.createReadStream(cssArr[i], 'utf-8');
